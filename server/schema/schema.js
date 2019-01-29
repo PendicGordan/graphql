@@ -8,7 +8,14 @@ const BookType = new GraphQLObjectType({
     fields: () => ({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
-        genre: { type: GraphQLString }
+        genre: { type: GraphQLString },
+        author: {
+            type: AuthorType,
+            resolve(parent, args) {
+                console.log('parent', parent);
+                return _.find(authors, { id: parent.authorId });
+            }
+        }
     })
 });
 
@@ -17,20 +24,27 @@ const AuthorType = new GraphQLObjectType({
     fields: () => ({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
-        age: { type: GraphQLInt }
+        age: { type: GraphQLInt },
+        book: {
+            type: BookType,
+            resolve(parent, args) {
+                console.log('parent', parent);
+                return _.find(books, { id: parent.bookId });
+            }
+        }
     })
 });
 
 var books = [
-    {name: 'Book1 name', genre: 'Fantasy', id: '1'},
-    {name: '300', genre: 'Action', id: '2'},
-    {name: '6th Sense', genre: 'Sci-Fi', id: '3'}
+    {name: 'Book1 name', genre: 'Fantasy', id: '1', authorId: '1'},
+    {name: '300', genre: 'Action', id: '2', authorId: '2'},
+    {name: '6th Sense', genre: 'Sci-Fi', id: '3', authorId: '3'}
 ];
 
 var authors = [
-    {name: 'John', age: 44, id: '1'},
-    {name: 'Mike', age: 33, id: '2'},
-    {name: 'Tom', age: 66, id: '3'}
+    {name: 'John', age: 44, id: '1', bookId: '1'},
+    {name: 'Mike', age: 33, id: '2', bookId: '2'},
+    {name: 'Tom', age: 66, id: '3', bookId: '3'}
 ];
 
 const RootQuery = new GraphQLObjectType({
