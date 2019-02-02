@@ -15,7 +15,8 @@ const BookType = new GraphQLObjectType({
             type: AuthorType,
             resolve(parent, args) {
                 console.log('parent', parent);
-                return _.find(authors, { id: parent.authorId });
+                //return _.find(authors, { id: parent.authorId });
+                return Author.findById(parent.authorId);
             }
         }
     })
@@ -31,7 +32,8 @@ const AuthorType = new GraphQLObjectType({
             type: new GraphQLList(BookType),
             resolve(parent, args) {
                 console.log('parent', parent);
-                return _.filter(books, { authorId: parent.id });
+                //return _.filter(books, { authorId: parent.id });
+                return Book.find({authorId: parent.id});
             }
         }
     })
@@ -68,7 +70,8 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args) {
                 // code to get data from db / other source
                 console.log('type: ' + typeof(args.id) + ' id: ' + args.id);
-                return _.find(books, {id: args.id});
+                //return _.find(books, {id: args.id});
+                return Book.findById(args.id);
             }
         },
         /**
@@ -83,21 +86,24 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args) {
                 // code to get data from db / other source
                 console.log('type: ' + typeof(args.id) + ' id: ' + args.id);
-                return _.find(authors, {id: args.id});
+                //return _.find(authors, {id: args.id});
+                return Author.findById(args.id);
             }
         },
         books: {
             type: new GraphQLList(BookType),
             resolve(parent, args) {
                 // code to get data from db / other source
-                return books;
+                //return books;
+                return Book.find({});
             }
         },
         authors: {
             type: new GraphQLList(AuthorType),
             resolve(parent, args) {
                 // code to get data from db / other source
-                return authors;
+                //return authors;
+                return Author.find({});
             }
         }
     }
